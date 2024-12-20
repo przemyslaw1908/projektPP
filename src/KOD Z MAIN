@@ -1,0 +1,40 @@
+Scanner odczyt = new Scanner("listastudentow.txt");
+        System.out.println("Witaj na stronie wirtualna uczelnia XYZ! \n"
+                + "wybierz nastepne menu: \n"
+                + "1.Logowanie 2.Rejestracja");
+
+        Scanner ObiektSkaner = new Scanner(System.in);
+        int wybor = ObiektSkaner.nextInt();
+        switch (wybor) {
+            case 1:
+                LinkedList<String> listaStudentow = new LinkedList<String>();
+                try {
+                    System.out.println("Wpisz numer studenta:");
+                    wybor = ObiektSkaner.nextInt();
+                    File listaStudentowPlik = new File("listaStudentow.txt");
+                    Scanner czytaczPliku = new Scanner(listaStudentowPlik);
+                    int licznik = 0;
+                    while (czytaczPliku.hasNextLine()) {
+
+                        String obecnaLinia = czytaczPliku.nextLine();
+                        System.out.println(obecnaLinia);
+                        licznik++;
+                        System.out.println(licznik);
+                    if (wybor == licznik) {
+                    System.out.println(obecnaLinia);
+                    break;
+                    }
+
+                    }
+                }
+                catch (FileNotFoundException e) {
+                    System.out.println("ERRORERROR");
+                }
+                    break;
+                    case 2:
+                        System.out.println("wewew");
+
+
+
+                }
+        }
