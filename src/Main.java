@@ -1,112 +1,128 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-
+// Importowanie bibliotek potrzebnych do pracy z plikami oraz operacjami wejścia-wyjścia
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Scanner;
 import java.util.LinkedList;
+import java.util.Scanner;
 
-public class Main { // deklaruje klase main
+public class Main { // Definiowanie głównej klasy programu
 
-    public static void main(String[] args) { // deklaruje metode main
+    public static void main(String[] args) { // Definiowanie metody main, która jest punktem wejścia programu
 
+        try { // Blok try-catch obsługujący wyjątki związane z operacjami wejścia/wyjścia
 
-        File listaStudentowPlik = new File("listaStudentow.txt");// deklaruje zmienna zawierajaca plik listastudentow
-        LinkedList<String> przedmioty = new LinkedList<String>();
-        File listaPrzedmiotowPlik = new File("listaPrzedmiotow.txt");
-        Scanner czytaczPlikuPrzedmioty = new Scanner(listaPrzedmiotowPlik); //tworzy skaner czytaczPliku skanujacy polik
-        while (czytaczPlikuPrzedmioty.hasNextLine()) { // tworzy petle while, ktora dziala dopoki plik ma nastepna linijke
-            przedmioty.add(czytaczPlikuPrzedmioty.nextLine());
-        }
-System.out.println(przedmioty);
+            // Tworzenie obiektu File, który reprezentuje plik z listą studentów
+            File listaStudentowPlik = new File("listaStudentow.txt");
+            // Pobieranie listy przedmiotów z pliku
+            LinkedList<String> przedmioty = getStrings();
 
+            // Wyświetlenie ekranu powitalnego i opcji wyboru
+            System.out.println("Witaj na stronie wirtualna uczelnia XYZ! \n"
+                    + "wybierz nastepne menu: \n"
+                    + "1.Logowanie 2.Rejestracja");
 
+            // Tworzenie obiektu skaner do odczytu danych wejściowych od użytkownika
+            Scanner ObiektSkaner = new Scanner(System.in);
+            // Odczytanie wyboru użytkownika
+            int wybor = ObiektSkaner.nextInt();
 
-        System.out.println("Witaj na stronie wirtualna uczelnia XYZ! \n" //wyswietla ekran powitalny
-                + "wybierz nastepne menu: \n" //wyswietla kolejna linijke ekranu powitalnego
-                + "1.Logowanie 2.Rejestracja"); //mowi o mozliwosciach wyboru z menu
-        Scanner ObiektSkaner = new Scanner(System.in); // tworzy obiekt skaner o nazwie ObiektSkaner skanujacy to co wpisze uzytkownik
-        int wybor = ObiektSkaner.nextInt(); //deklaruje zmienna w ktorej znajduje sie to co napisze uzytkownik, a dokladniej wybor kolejnego menu po menu powitalnym (logowanie lub rejestracja)
-        switch (wybor) { // deklaruje przelacznik switch, ktory w zaleznosci od poprzedniego wyboru uzytkownika, wlaczy nastepne menu
-            case 1://wybor pierwszy (Logowanie)
-                try { // instrukcja try, która wyboera blok kodu i szuka w nim błędu
-                    Boolean uzytkownikZalogowany = new Boolean(false);
-                    while (!uzytkownikZalogowany) {
-                        System.out.println("Wpisz numer studenta:");//wyswietla na ekranie prosbe o numer studenta
-                        wybor = ObiektSkaner.nextInt(); // definiuje zmienna wybor jako nastepna linijke wpisana przez uzytkownika, w tym przypadku jest to numer studenta czyli tak na prawde index pola w ktorym znajduje sie haslo
-                        Scanner czytaczPliku = new Scanner(listaStudentowPlik); //deklaruje skaner czytacz pliku, który ma na celu odczytanie zawartosci pliku
-                        int obecnaLinijkaPliku = 0; //deklaruje zmienna obecnaLinijkaPliku, w ktorej znajduje sie numer obecnej linijki pliku
-                        String hasloStudenta = new String("");
-                        while (czytaczPliku.hasNextLine()) { //zaczyna instrukcje while ktora dziala dopoki plik ma nastepna zapelniona linijke
-                            String obecnaLinia = czytaczPliku.nextLine(); //definiuje obiekt String, w którym znajduje sie obecna linijka
-                            obecnaLinijkaPliku++; //inkrementuje zmienna obecnaLinijkaPliku
-                            System.out.println(obecnaLinijkaPliku);
-                            if (wybor == obecnaLinijkaPliku) { // sprawdza czy wpisany przez uzytkownika numer studenta jest taki sam jak obecna linijka
-                                hasloStudenta = obecnaLinia; // zapisuje haslo studenta ktory probuje sie zalogowac
-                                break; //konczy petle while, jako iz znalezlismy poszukiwana linijke
+            // Przełącznik switch, który wybiera odpowiednią opcję w zależności od wyboru użytkownika
+            switch (wybor) {
+                case 1: // Jeśli użytkownik wybierze 1 (Logowanie)
+                    boolean uzytkownikZalogowany = false; // Flaga kontrolująca proces logowania
+                    while (!uzytkownikZalogowany) { // Pętla działa dopóki użytkownik nie zaloguje się poprawnie
+                        // Prośba o wpisanie numeru studenta
+                        System.out.println("Wpisz numer studenta:");
+                        // Odczytanie numeru studenta od użytkownika
+                        wybor = ObiektSkaner.nextInt();
+
+                        // Tworzenie obiektu do odczytu pliku z listą studentów
+                        Scanner czytaczPliku = new Scanner(listaStudentowPlik);
+                        int obecnaLinijkaPliku = 0; // Zmienna śledząca numer bieżącej linii w pliku
+                        String hasloStudenta = ""; // Zmienna przechowująca hasło studenta
+
+                        // Pętla, która przeszukuje plik z listą studentów
+                        while (czytaczPliku.hasNextLine()) {
+                            // Odczytanie kolejnej linii z pliku
+                            String obecnaLinia = czytaczPliku.nextLine();
+                            obecnaLinijkaPliku++; // Inkrementacja numeru linii
+                            System.out.println(obecnaLinijkaPliku); // Wyświetlanie numeru linii (do debugowania)
+                            // Sprawdzanie, czy numer studenta wprowadzonego przez użytkownika odpowiada bieżącej linii
+                            if (wybor == obecnaLinijkaPliku) {
+                                hasloStudenta = obecnaLinia; // Jeśli tak, zapisujemy hasło tego studenta
+                                break; // Kończymy przeszukiwanie pliku, gdy znajdziemy odpowiednią linię
                             }
-
                         }
 
+                        // Prośba o wpisanie hasła
                         System.out.println("Wpisz swoje haslo:");
+                        // Tworzenie obiektu do odczytu hasła od użytkownika
                         Scanner czytaczHasla = new Scanner(System.in);
+                        // Odczytanie wpisanego hasła
                         String wpisaneHaslo = czytaczHasla.nextLine();
-                        System.out.println(wpisaneHaslo);
+                        System.out.println(wpisaneHaslo); // Wyświetlenie wpisanego hasła (do debugowania)
+                        // Porównanie wprowadzonego hasła z zapisanym hasłem studenta
                         if (hasloStudenta.equals(wpisaneHaslo)) {
-                            uzytkownikZalogowany = true;
-                        } else {System.out.println("ZLE HASLO ZALOGUJ SIE PONOWNIE");}
-
+                            uzytkownikZalogowany = true; // Ustawienie flagi, jeśli hasła się zgadzają
+                        } else {
+                            // Jeśli hasła się nie zgadzają, wyświetlenie komunikatu o błędzie
+                            System.out.println("ZLE HASLO ZALOGUJ SIE PONOWNIE");
+                        }
                     }
+                    break; // Koniec case 1 (Logowanie)
 
-                } catch (
-                        FileNotFoundException e) { //instrukcja ktora, przy bledzie FileNotFoundException wykonuje nastepna linijke
-                    System.out.println("ERRORERROR"); //wyswietlanie informacji o bledzie uzytkownikowi
-                }
-                break; //zakancza case 1
-            case 2: //drugi przypadek instruckji switch, (rejestracja)
-                try { // instrukcja try, która wyboera blok kodu i szuka w nim błędu
+                case 2: // Jeśli użytkownik wybierze 2 (Rejestracja)
+                    // Pobranie numeru nowego studenta z pliku
                     int numerNowegoStudenta = getNumerNowegoStudenta(listaStudentowPlik);
-                    System.out.println("twoj numer studenta to" + numerNowegoStudenta); // wyswietla na ekranie numer studenta
-                    System.out.println("wpisz swoje haslo:"); //prosi o wpisanie hasla
-                    ObiektSkaner.nextLine();
-                    String wpisaneHaslo = ObiektSkaner.nextLine(); //definiuje obiekt wpisaneHaslo jako nastepna linijka wpisana przez uzytkownika
-                    wpisaneHaslo = "\n" + wpisaneHaslo; //ta linijka sprawia ze wpisane haslo bedzie dodane na koncu pliku plus kolejna linijka
-                    Files.write(Paths.get("listaStudentow.txt"), wpisaneHaslo.getBytes(), StandardOpenOption.APPEND); // zapisuje do pliku wpisane haslo
+                    // Wyświetlenie numeru studenta
+                    System.out.println("twoj numer studenta to" + numerNowegoStudenta);
+                    // Prośba o wpisanie hasła
+                    System.out.println("wpisz swoje haslo:");
+                    ObiektSkaner.nextLine(); // Czyszczenie bufora po poprzednim odczycie
+                    // Odczytanie hasła od użytkownika
+                    String wpisaneHaslo = ObiektSkaner.nextLine();
+                    // Dodanie nowego hasła na końcu pliku (z nową linią)
+                    wpisaneHaslo = "\n" + wpisaneHaslo;
+                    // Zapisanie hasła do pliku z listą studentów
+                    Files.write(Paths.get("listaStudentow.txt"), wpisaneHaslo.getBytes(), StandardOpenOption.APPEND);
+                    // Tworzenie nowego pliku dla studenta
                     File obiektZarejestrowanyStudent = new File("studenci" + File.separator + numerNowegoStudenta + ".txt");
-                    obiektZarejestrowanyStudent.createNewFile();
-
-                    break;
-                } catch (FileNotFoundException e) { // instrukcja ktora przy bledzie  FileNotFoundException wykonuje nastepna linijkke
-                    System.out.println("ERRORERROR:FileNotFoundException"); // wyswietla blad
-                } catch (IOException e) { //instruckaj ktora przy bledzie IOException wykonuje nastepna linijke
-                    System.out.println("ERRORERROR:IOException"); // wyswietla blad
-
-                }
+                    obiektZarejestrowanyStudent.createNewFile(); // Tworzenie nowego pliku studenta
+                    break; // Koniec case 2 (Rejestracja)
+            }
+        } catch (FileNotFoundException e) { // Obsługa wyjątku, gdy plik nie zostanie znaleziony
+            System.out.println("ERROR:FileNotFoundException");
+        } catch (IOException e) { // Obsługa ogólnych wyjątków związanych z wejściem/wyjściem
+            System.out.println("ERROR:IOException");
         }
-
     }
 
+    // Metoda do pobrania listy przedmiotów z pliku
+    private static LinkedList<String> getStrings() throws FileNotFoundException {
+        LinkedList<String> przedmioty = new LinkedList<>();
+        // Tworzenie obiektu do odczytu pliku z przedmiotami
+        File listaPrzedmiotowPlik = new File("listaPrzedmiotow.txt");
+        Scanner czytaczPlikuPrzedmioty = new Scanner(listaPrzedmiotowPlik);
+        // Pętla przeszukująca plik i dodająca linie do listy przedmiotów
+        while (czytaczPlikuPrzedmioty.hasNextLine()) {
+            String obecnaLinia = czytaczPlikuPrzedmioty.nextLine();
+            przedmioty.add(obecnaLinia); // Dodanie bieżącej linii do listy przedmiotów
+        }
+        return przedmioty; // Zwrócenie listy przedmiotów
+    }
+
+    // Metoda do uzyskania numeru nowego studenta na podstawie liczby wierszy w pliku
     private static int getNumerNowegoStudenta(File listaStudentowPlik) throws FileNotFoundException {
-        Scanner czytaczPliku = new Scanner(listaStudentowPlik); //tworzy skaner czytaczPliku skanujacy polik
-        int numerNowegoStudenta = 1; // deklaruje zmienna numerNowegoStudenta
-        while (czytaczPliku.hasNextLine()) { // tworzy petle while, ktora dziala dopoki plik ma nastepna linijke
-            String obecnaLiniaa = new String();
-            obecnaLiniaa = czytaczPliku.nextLine();
-            numerNowegoStudenta++; //inkrementuje zmienna obecna linijka pliku
+        Scanner czytaczPliku = new Scanner(listaStudentowPlik);
+        int numerNowegoStudenta = 1; // Początkowy numer studenta
+        // Pętla przeszukująca plik i inkrementująca numer studenta na podstawie liczby wierszy w pliku
+        while (czytaczPliku.hasNextLine()) {
+            czytaczPliku.nextLine(); // Odczytanie bieżącej linii
+            numerNowegoStudenta++; // Inkrementacja numeru studenta
         }
-        return numerNowegoStudenta;
+        return numerNowegoStudenta; // Zwrócenie numeru nowego studenta
     }
-
-    }
-
-
-
-
-
-
-
-
+}
