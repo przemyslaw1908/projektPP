@@ -1,0 +1,31 @@
+1. Wstęp
+
+Niniejszy program realizuje prosty system do obsługi logowania oraz rejestracji studentów na stronie internetowej wirtualnej uczelni XYZ. Program umożliwia dwie podstawowe operacje: logowanie użytkowników, którzy mają już swoje konto, oraz rejestrację nowych studentów. Aplikacja korzysta z plików do przechowywania danych użytkowników i przedmiotów.
+
+2. Struktura programu
+
+Program składa się z jednej klasy Main, która zawiera metodę main - punkt wejścia programu. Klasa ta wykorzystuje mechanizmy obsługi plików i operacji wejścia/wyjścia. Struktura programu jest następująca:
+
+Metoda main: Odpowiada za interakcję z użytkownikiem, wyświetlanie menu oraz realizowanie operacji logowania i rejestracji.
+Metoda getStrings: Odczytuje dane z pliku "listaPrzedmiotow.txt" i zwraca je w postaci listy LinkedList<String>.
+Metoda getNumerNowegoStudenta: Odczytuje plik "listaStudentow.txt", liczy liczbę studentów zapisanych w pliku i zwraca numer nowego studenta.
+3. Przebieg działania programu
+
+Po uruchomieniu programu użytkownik widzi menu powitalne, które umożliwia wybór jednej z dwóch opcji:
+
+1. Logowanie: Użytkownik wprowadza swój numer studenta. Program sprawdza, czy numer ten istnieje w pliku "listaStudentow.txt". Następnie system prosi o podanie hasła. Jeśli numer studenta i hasło zgadzają się z zapisanymi w pliku, użytkownik zostaje zalogowany.
+
+2. Rejestracja: Program generuje numer nowego studenta na podstawie liczby wierszy w pliku "listaStudentow.txt". Użytkownik zostaje poproszony o podanie hasła, które zostaje zapisane w pliku. Tworzony jest również nowy plik reprezentujący studenta w katalogu "studenci".
+
+4. Szczegóły implementacyjne
+
+Praca z plikami:
+
+Program korzysta z klasy File do odczytu i zapisu plików.
+Używa klasy Scanner do odczytywania danych z plików tekstowych.
+Nowi użytkownicy mają swoje dane zapisane w pliku "listaStudentow.txt", natomiast dane dotyczące przedmiotów są przechowywane w pliku "listaPrzedmiotow.txt".
+Hasła są dodawane na końcu pliku przy użyciu klasy Files i metody write, z opcją APPEND, co pozwala na dodanie nowego hasła bez nadpisywania istniejących danych.
+Obsługa wyjątków:
+
+Program obsługuje wyjątki związane z brakiem pliku (FileNotFoundException) oraz ogólne wyjątki związane z operacjami na plikach (IOException).
+W przypadku błędów wejścia/wyjścia użytkownik otrzymuje komunikat o błędzie.
